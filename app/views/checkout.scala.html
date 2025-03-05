@@ -1,0 +1,46 @@
+@()(implicit request: play.mvc.Http.Request)
+@main("Checkout - Coffee House") {
+<section class="checkout">
+    <h2>Checkout</h2>
+    <div class="checkout-container">
+        <div class="billing-info">
+            <h3>Billing Details</h3>
+            <form id="checkout-form">
+                <label for="name">Full Name:</label>
+                <input type="text" id="name" placeholder="John Doe" required>
+                <label for="email">Email Address:</label>
+                <input type="email" id="email" placeholder="exampleatemail.com" required>
+                <label for="phone">Phone Number:</label>
+                <input type="tel" id="phone" placeholder="07XXXXXXXX" required>
+                <h3>Payment Method</h3>
+                <label><input type="radio" name="payment" value="cash" checked> Cash on Delivery</label>
+                <label><input type="radio" name="payment" value="mpesa"> M-Pesa</label>
+                <label><input type="radio" name="payment" value="card"> Credit/Debit Card</label>
+            </form>
+        </div>
+
+        <div class="order-summary">
+            <h3>Order Summary</h3>
+            <table class="checkout-table">
+                <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Price (KES)</th>
+                    <th>Quantity</th>
+                    <th>Total (KES)</th>
+                </tr>
+                </thead>
+                <tbody id="checkout-items">
+                <!-- Dynamic items will be inserted here -->
+                </tbody>
+            </table>
+            <div class="total-amount">
+                <h3>Total: KES <span id="checkout-total">0.00</span></h3>
+            </div>
+            <button class="btn place-order-btn">Place Order</button>
+        </div>
+    </div>
+</section>
+
+<script src="@routes.Assets.versioned("javascripts/checkout.js")"></script>
+}

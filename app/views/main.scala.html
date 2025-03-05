@@ -1,0 +1,39 @@
+@*
+ * This template is called from the `index` template. This template
+ * handles the rendering of the page header and body tags. It takes
+ * two arguments, a `String` for the title of the page and an `Html`
+ * object to insert into the body of the page.
+ *@
+@(title: String)(content: Html)
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@title</title>
+    <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/main.css")">
+    <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/styles.css")">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+<body>
+<header>
+    <h1 class="logo">☕ Coffee House</h1>
+    <nav>
+        <ul>
+            <li><a href="@routes.HomeController.index">Home</a></li>
+            <li><a href="@routes.HomeController.menu">Menu</a></li>
+            <li><a href="@routes.HomeController.cart">Cart</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main>
+    @content
+</main>
+
+<footer>
+    <p>&copy; 2025 Coffee House. All rights reserved.</p>
+</footer>
+</body>
+</html>

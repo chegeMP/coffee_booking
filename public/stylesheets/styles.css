@@ -1,0 +1,94 @@
+/* Checkout Page Styles */
+.checkout {
+    padding: 30px;
+    max-width: 900px;
+    margin: auto;
+    background: #f8f1e5; /* Light coffee-themed background */
+    border-radius: 12px;
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+/* Checkout Container */
+.checkout-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 25px;
+    flex-wrap: wrap;
+}
+
+/* Billing Info & Order Summary */
+.billing-info, .order-summary {
+    flex: 1;
+    padding: 20px;
+    border-radius: 10px;
+    background: white;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.billing-info h3, .order-summary h3 {
+    margin-bottom: 15px;
+    color: #4B382A; /* Dark coffee-brown color */
+    font-size: 24px;
+    font-weight: bold;
+}
+
+input[type="text"], input[type="email"], input[type="tel"] {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+/* Checkout Table */
+.checkout-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.checkout-table th, .checkout-table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+}
+
+.checkout-table th {
+    background: #ff9f1c; /* Warm orange accent */
+    color: white;
+    font-size: 18px;
+}
+
+.total-amount {
+    text-align: right;
+    font-size: 20px;
+    font-weight: bold;
+    color: #503123;
+    margin-top: 15px;
+}
+
+/* Place Order Button */
+.place-order-btn {
+    width: 100%;
+    padding: 14px;
+    font-size: 18px;
+    background: #ff9f1c; /* Coffee-inspired warm accent */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s ease, transform 0.2s;
+}
+
+.place-order-btn:hover {
+    background: #ff7300;
+    transform: scale(1.05);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .checkout-container {
+        flex-direction: column;
+    }
+}

@@ -1,0 +1,86 @@
+@()(implicit request: play.mvc.Http.Request)
+@main("Menu - Coffee House") {
+<section class="menu">
+    <h2>Our Coffee Selection</h2>
+    <div class="menu-grid">
+        <div class="menu-item">
+            <img src="@routes.Assets.versioned("images/espresso1.jpg")" alt="Espresso" class="menu-img">
+            <div class="menu-details">
+                <h3>Espresso</h3>
+                <p>Rich and bold espresso shot.</p>
+                <span class="price">KES 450</span>
+                <button class="btn add-to-cart" data-name="Espresso" data-price="450">Add to Cart</button>
+            </div>
+        </div>
+        <div class="menu-item">
+            <img src="@routes.Assets.versioned("images/latte.jpg")" alt="Latte" class="menu-img">
+            <div class="menu-details">
+                <h3>Latte</h3>
+                <p>Steamed milk with a shot of espresso.</p>
+                <span class="price">KES 600</span>
+                <button class="btn add-to-cart" data-name="Latte" data-price="600">Add to Cart</button>
+            </div>
+        </div>
+        <div class="menu-item">
+            <img src="@routes.Assets.versioned("images/cappuccino.jpg")" alt="Cappuccino" class="menu-img">
+            <div class="menu-details">
+                <h3>Cappuccino</h3>
+                <p>Espresso with frothy milk foam.</p>
+                <span class="price">KES 550</span>
+                <button class="btn add-to-cart" data-name="Cappuccino" data-price="550">Add to Cart</button>
+            </div>
+        </div>
+        <div class="menu-item">
+            <img src="@routes.Assets.versioned("images/americano.jpg")" alt="Americano" class="menu-img">
+            <div class="menu-details">
+                <h3>Americano</h3>
+                <p>Espresso with hot water for a smooth taste.</p>
+                <span class="price">KES 500</span>
+                <button class="btn add-to-cart" data-name="Americano" data-price="500">Add to Cart</button>
+            </div>
+        </div>
+        <div class="menu-item">
+            <img src="@routes.Assets.versioned("images/mocha.jpg")" alt="Mocha" class="menu-img">
+            <div class="menu-details">
+                <h3>Mocha</h3>
+                <p>Espresso with chocolate and steamed milk.</p>
+                <span class="price">KES 700</span>
+                <button class="btn add-to-cart" data-name="Mocha" data-price="700">Add to Cart</button>
+            </div>
+        </div>
+    </div>
+
+    <h2>Snacks & Specialties</h2>
+    <div class="menu-grid">
+        <div class="menu-item">
+            <img src="@routes.Assets.versioned("images/donut-special.jpg")" alt="Donut Special" class="menu-img">
+            <div class="menu-details">
+                <h3>Coffee House Donut Special</h3>
+                <p>A fluffy donut served with a hint of espresso glaze.</p>
+                <span class="price">KES 350</span>
+                <button class="btn add-to-cart" data-name="Coffee House Donut Special" data-price="350">Add to Cart</button>
+            </div>
+        </div>
+        <div class="menu-item">
+            <img src="@routes.Assets.versioned("images/croissant.jpg")" alt="Croissant" class="menu-img">
+            <div class="menu-details">
+                <h3>Butter Croissant</h3>
+                <p>Flaky, buttery croissant—perfect with coffee.</p>
+                <span class="price">KES 400</span>
+                <button class="btn add-to-cart" data-name="Butter Croissant" data-price="400">Add to Cart</button>
+            </div>
+        </div>
+        <div class="menu-item">
+            <img src="@routes.Assets.versioned("images/cheesecake.jpg")" alt="Cheesecake" class="menu-img">
+            <div class="menu-details">
+                <h3>Classic Cheesecake</h3>
+                <p>Creamy cheesecake with a graham cracker crust.</p>
+                <span class="price">KES 650</span>
+                <button class="btn add-to-cart" data-name="Classic Cheesecake" data-price="650">Add to Cart</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="@routes.Assets.versioned("javascripts/cart.js")"></script>
+}

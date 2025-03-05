@@ -1,0 +1,36 @@
+@()(implicit request: play.mvc.Http.Request)
+@main("Home - Coffee House") {
+<section class="hero">
+  <div class="hero-text">
+    <h2>Welcome to Coffee House</h2>
+    <p>Your daily dose of the best coffee in town!</p>
+    <a href="@routes.HomeController.menu()" class="btn">View Menu</a>
+  </div>
+</section>
+
+<section class="about">
+  <h2>About Us</h2>
+  <p>We are passionate about serving high-quality coffee, sourced ethically from the best farms worldwide.</p>
+  <img src="@routes.Assets.versioned("images/coffee_shop.jpg")" alt="Coffee Shop">
+</section>
+
+<section class="testimonials">
+  <h2>What Our Customers Say</h2>
+  <div class="testimonial">
+    <p>"Best coffee I've ever had! The aroma and taste are just perfect!"</p>
+    <span>- Jane Doe</span>
+  </div>
+  <div class="testimonial">
+    <p>"Love the atmosphere and the friendly staff. Highly recommend!"</p>
+    <span>- John Smith</span>
+  </div>
+</section>
+
+<section class="featured-coffee">
+  <h2>Today's Special</h2>
+  <div class="coffee-item">
+    <img src="@routes.Assets.versioned("images/special_coffee.jpg")" alt="Special Coffee">
+    <p>Try our exclusive Ethiopian Blend, rich with caramel and chocolate notes.</p>
+  </div>
+</section>
+}
