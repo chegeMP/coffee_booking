@@ -1,0 +1,12 @@
+@(title: String = "Admin Dashboard")
+
+@main(title) {
+<div class="admin-container">
+    <h2>Welcome to the Admin Panel</h2>
+
+    <div class="admin-links">
+        <a href="@routes.AdminController.list()" class="admin-button">Manage Coffee</a>
+        <a href="@routes.AdminController.createForm()" class="admin-button">Add New Coffee</a>
+    </div>
+</div>
+}
