@@ -15,3 +15,7 @@ GET     /admin/coffee/new            controllers.AdminController.createForm(requ
 POST    /admin/coffee   controllers.AdminController.create(request: Request)
 GET     /admin/coffee/:id/delete     controllers.AdminController.delete(request: Request, id: Int)
 GET     /admin             controllers.AdminController.dashboard(request: Request)
+
+
+GET   /admin/coffee/edit/:id     controllers.AdminController.editForm(request: Request, id: Int)
+POST  /admin/coffee/update/:id   controllers.AdminController.update(request: Request, id: Int)

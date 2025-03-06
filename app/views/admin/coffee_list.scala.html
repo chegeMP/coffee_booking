@@ -22,6 +22,7 @@
             <td>@coffee.name</td>
             <td>KES @coffee.price</td>
             <td>
+                <a href="@routes.AdminController.editForm(coffee.id)" class="admin-action">Edit</a> |
                 <a href="@routes.AdminController.delete(coffee.id)" class="admin-action">Delete</a>
             </td>
         </tr>

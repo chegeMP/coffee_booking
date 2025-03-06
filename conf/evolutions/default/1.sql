@@ -62,7 +62,7 @@ create table coffee (
   created_at                    datetime not null,
   updated_at                    datetime not null,
   quantity                      integer not null,
-  image_url                     varchar(255),
+  imageUrl                      varchar(255),
   constraint pk_coffee primary key (id)
 );
 

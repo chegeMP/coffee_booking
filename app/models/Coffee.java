@@ -37,7 +37,8 @@ public class Coffee extends Model {
     @Column(nullable = false)
     public Integer quantity; // Ensure it matches int(11)
 
-    @Column(nullable = true, length = 255) // New column for image URL
+
+    @Column(name = "imageUrl", nullable = true, length = 255) // New column for image URL
     public String imageUrl;
 
     public static final Finder<Integer, Coffee> find = new Finder<>(Coffee.class);
@@ -66,6 +67,7 @@ public class Coffee extends Model {
 
     public Integer getQuantity() { return quantity; }
     public void setQuantity(Integer quantity) { this.quantity = quantity; }
+
 
     public String getImageUrl() { return imageUrl; }
     public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
