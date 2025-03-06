@@ -92,3 +92,250 @@ input[type="text"], input[type="email"], input[type="tel"] {
         flex-direction: column;
     }
 }
+
+
+
+/* Coffee Grid Layout */
+.coffee-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+/* Individual Coffee Cards */
+.coffee-card {
+    background: #fff;
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+}
+
+.coffee-card:hover {
+    transform: translateY(-5px);
+}
+
+/* Coffee Image */
+.coffee-card img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+/* Coffee Name */
+.coffee-card h3 {
+    margin-top: 10px;
+    color: #5A3E36;
+}
+
+/* Price */
+.coffee-card p {
+    color: #333;
+    font-size: 16px;
+}
+
+/* Add to Cart Button */
+.add-to-cart {
+    background: #E67E22;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.add-to-cart:hover {
+    background: #D35400;
+}
+
+
+
+
+
+/* Admin Dashboard Styles */
+.admin-container {
+    padding: 30px;
+    max-width: 900px;
+    margin: auto;
+    background: #f8f1e5; /* Light coffee-themed background */
+    border-radius: 12px;
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.15);
+    text-align: center;
+}
+
+/* Admin Title */
+.admin-container h2 {
+    color: #4B382A; /* Dark coffee-brown */
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+/* Admin Navigation */
+.admin-links {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+/* Buttons for Admin Actions */
+.admin-button {
+    display: inline-block;
+    padding: 12px 20px;
+    background: #E67E22; /* Coffee-inspired warm accent */
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background 0.3s ease, transform 0.2s;
+}
+
+.admin-button:hover {
+    background: #D35400;
+    transform: scale(1.05);
+}
+
+/* Coffee Management Table */
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.admin-table th, .admin-table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+}
+
+.admin-table th {
+    background: #ff9f1c; /* Warm orange accent */
+    color: white;
+    font-size: 18px;
+}
+
+.admin-table td {
+    background: white;
+}
+
+/* Action Buttons */
+.admin-action {
+    padding: 8px 12px;
+    font-size: 16px;
+    background: #503123;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.admin-action:hover {
+    background: #3e251c;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .admin-links {
+        flex-direction: column;
+    }
+}
+/* Admin Page Styling */
+.admin-container {
+    padding: 30px;
+    max-width: 900px;
+    margin: auto;
+    background: #f8f1e5; /* Light coffee-themed background */
+    border-radius: 12px;
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.15);
+    text-align: center;
+}
+
+/* Admin Title */
+.admin-container h2 {
+    color: #4B382A; /* Dark coffee-brown */
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+/* Admin Navigation */
+.admin-links {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+/* Buttons */
+.admin-button {
+    display: inline-block;
+    padding: 12px 20px;
+    background: #E67E22; /* Coffee-inspired warm accent */
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background 0.3s ease, transform 0.2s;
+}
+
+.admin-button:hover {
+    background: #D35400;
+    transform: scale(1.05);
+}
+
+/* Table */
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.admin-table th, .admin-table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+}
+
+.admin-table th {
+    background: #ff9f1c; /* Warm orange accent */
+    color: white;
+    font-size: 18px;
+}
+
+.admin-table td {
+    background: white;
+}
+
+/* Delete Action Button */
+.admin-action {
+    padding: 8px 12px;
+    font-size: 16px;
+    background: #D35400;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.admin-action:hover {
+    background: #B7410E;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .admin-links {
+        flex-direction: column;
+    }
+}
+
+
+
+

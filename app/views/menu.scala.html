@@ -1,53 +1,20 @@
-@()(implicit request: play.mvc.Http.Request)
+@(coffeeList: List[models.Coffee])(implicit request: play.mvc.Http.Request)
+
 @main("Menu - Coffee House") {
 <section class="menu">
     <h2>Our Coffee Selection</h2>
     <div class="menu-grid">
+        @for(coffee <- coffeeList) {
         <div class="menu-item">
-            <img src="@routes.Assets.versioned("images/espresso1.jpg")" alt="Espresso" class="menu-img">
+            <img src="@coffee.imageUrl" alt="@coffee.name" class="menu-img">
             <div class="menu-details">
-                <h3>Espresso</h3>
-                <p>Rich and bold espresso shot.</p>
-                <span class="price">KES 450</span>
-                <button class="btn add-to-cart" data-name="Espresso" data-price="450">Add to Cart</button>
+                <h3>@coffee.name</h3>
+                <p>@coffee.description</p> <!-- Add a description field in the model if needed -->
+                <span class="price">KES @coffee.price</span>
+                <button class="btn add-to-cart" data-name="@coffee.name" data-price="@coffee.price">Add to Cart</button>
             </div>
         </div>
-        <div class="menu-item">
-            <img src="@routes.Assets.versioned("images/latte.jpg")" alt="Latte" class="menu-img">
-            <div class="menu-details">
-                <h3>Latte</h3>
-                <p>Steamed milk with a shot of espresso.</p>
-                <span class="price">KES 600</span>
-                <button class="btn add-to-cart" data-name="Latte" data-price="600">Add to Cart</button>
-            </div>
-        </div>
-        <div class="menu-item">
-            <img src="@routes.Assets.versioned("images/cappuccino.jpg")" alt="Cappuccino" class="menu-img">
-            <div class="menu-details">
-                <h3>Cappuccino</h3>
-                <p>Espresso with frothy milk foam.</p>
-                <span class="price">KES 550</span>
-                <button class="btn add-to-cart" data-name="Cappuccino" data-price="550">Add to Cart</button>
-            </div>
-        </div>
-        <div class="menu-item">
-            <img src="@routes.Assets.versioned("images/americano.jpg")" alt="Americano" class="menu-img">
-            <div class="menu-details">
-                <h3>Americano</h3>
-                <p>Espresso with hot water for a smooth taste.</p>
-                <span class="price">KES 500</span>
-                <button class="btn add-to-cart" data-name="Americano" data-price="500">Add to Cart</button>
-            </div>
-        </div>
-        <div class="menu-item">
-            <img src="@routes.Assets.versioned("images/mocha.jpg")" alt="Mocha" class="menu-img">
-            <div class="menu-details">
-                <h3>Mocha</h3>
-                <p>Espresso with chocolate and steamed milk.</p>
-                <span class="price">KES 700</span>
-                <button class="btn add-to-cart" data-name="Mocha" data-price="700">Add to Cart</button>
-            </div>
-        </div>
+        }
     </div>
 
     <h2>Snacks & Specialties</h2>

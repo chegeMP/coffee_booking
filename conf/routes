@@ -1,12 +1,17 @@
 # Routes
 # This file defines all application routes (Higher priority routes first)
-# ~~~~
-
-
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
-GET     /                 controllers.HomeController.index(request: Request)
-GET     /menu             controllers.HomeController.menu(request: Request)
-GET     /cart             controllers.HomeController.cart(request: Request)
-GET   /checkout         controllers.HomeController.checkout(request: Request)
+GET     /                            controllers.HomeController.index(request: Request)
+GET     /menu                        controllers.HomeController.menu(request: Request)
+GET     /cart                        controllers.HomeController.cart(request: Request)
+GET     /checkout                    controllers.HomeController.checkout(request: Request)
+POST    /cart/remove/:id             controllers.HomeController.removeFromCart(request: Request, id: Int)
+
+# Admin Routes for managing coffee items
+GET     /admin/coffee                controllers.AdminController.list()
+GET     /admin/coffee/new            controllers.AdminController.createForm(request: Request)
+POST    /admin/coffee   controllers.AdminController.create(request: Request)
+GET     /admin/coffee/:id/delete     controllers.AdminController.delete(request: Request, id: Int)
+GET     /admin             controllers.AdminController.dashboard(request: Request)
