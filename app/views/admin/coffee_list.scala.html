@@ -19,17 +19,18 @@
         <tbody>
         @for(coffee <- coffees) {
         <tr>
-            <td>@coffee.getName()</td> <!-- Use getter -->
-            <td>KES @coffee.getPrice()</td> <!-- Use getter -->
+            <td>@coffee.getName()</td> <!-- Display the coffee name -->
+            <td>KES @coffee.getPrice()</td> <!-- Display the coffee price -->
             <td>
-                <!-- Existing Edit and Delete actions -->
+                <!-- Edit and Delete actions for the coffee -->
                 <a href="@routes.AdminController.editForm(coffee.getId())" class="admin-action">Edit</a> |
                 <a href="@routes.AdminController.delete(coffee.getId())" class="admin-action">Delete</a>
 
                 <!-- Add to Cart Button -->
                 <button class="btn add-to-cart"
-                        data-id="@coffee.getId()"  <!-- Add data-id for coffee -->
-                data-price="@coffee.getPrice()">
+                        data-id="@coffee.getId()"  <!-- Coffee ID -->
+                data-name="@coffee.getName()"  <!-- Coffee Name -->
+                data-price="@coffee.getPrice()">  <!-- Coffee Price -->
                 Add to Cart
                 </button>
             </td>
@@ -37,5 +38,6 @@
         }
         </tbody>
     </table>
+
 </div>
 }

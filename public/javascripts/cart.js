@@ -4,15 +4,24 @@ document.addEventListener("DOMContentLoaded", function () {
         // Handle "Add to Cart" button click
         if (event.target.classList.contains("add-to-cart")) {
             const coffeeId = event.target.getAttribute("data-id");  // Getting the coffee ID
-            const coffeePrice = event.target.getAttribute("data-price");
+            const coffeeName = event.target.getAttribute("data-name"); // Getting the coffee name
+            const coffeePrice = event.target.getAttribute("data-price"); // Getting the coffee price
 
-            fetch(`/add-to-cart/${coffeeId}`, {  // Use /add-to-cart/:id route
+            // Check if any of the data attributes are missing
+            if (!coffeeId || !coffeeName || !coffeePrice) {
+                console.error("Missing coffee data attributes: coffeeId, coffeeName, or coffeePrice");
+                return;  // Exit if necessary attributes are not found
+            }
+
+            // Add to cart request
+            fetch(`/add-to-cart/${coffeeId}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                 },
                 body: JSON.stringify({
+                    name: coffeeName,
                     price: coffeePrice
                 })
             })
