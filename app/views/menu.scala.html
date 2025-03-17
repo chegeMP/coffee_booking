@@ -6,12 +6,19 @@
     <div class="menu-grid">
         @for(coffee <- coffeeList) {
         <div class="menu-item">
-            <img src="@coffee.imageUrl" alt="@coffee.name" class="menu-img">
+            <img src="@Option(coffee.getImageUrl()).getOrElse("/assets/images/default.jpg")"
+            alt="@Option(coffee.getName()).getOrElse("Unknown")"
+            class="menu-img">
+
             <div class="menu-details">
-                <h3>@coffee.name</h3>
-                <p>@coffee.description</p>
-                <span class="price">KES @coffee.price</span>
-                <button class="btn add-to-cart" data-name="@coffee.name" data-price="@coffee.price">Add to Cart</button>
+                <h3>@coffee.getName()</h3>
+                <p>@coffee.getDescription()</p>
+                <span class="price">KES @coffee.getPrice()</span>
+                <button class="btn add-to-cart"
+                        data-name="@Option(coffee.getName()).getOrElse("Unknown")"
+                data-price="@Option(coffee.getPrice()).getOrElse("0")">
+                Add to Cart
+                </button>
             </div>
         </div>
         }

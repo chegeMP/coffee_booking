@@ -6,12 +6,12 @@ import models.CoffeeSize;
 import play.data.Form;
 import play.data.FormFactory;
 import play.mvc.*;
+import play.libs.Files;
 import play.libs.Files.TemporaryFile;
 
 import javax.inject.Inject;
 import java.io.File;
 import java.math.BigDecimal;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import views.html.admin.dashboard;
@@ -45,34 +45,41 @@ public class AdminController extends Controller {
     // Handle coffee creation
     public Result create(Http.Request request) {
         Http.MultipartFormData<TemporaryFile> body = request.body().asMultipartFormData();
-        Http.MultipartFormData.FilePart<TemporaryFile> imageFile = body.getFile("image");
+        TemporaryFile tempFile = null;
+        String fileName = null;
+
+        if (body != null) {
+            Http.MultipartFormData.FilePart<TemporaryFile> imageFile = body.getFile("image");
+            if (imageFile != null) {
+                fileName = System.currentTimeMillis() + "_" + imageFile.getFilename();
+                tempFile = imageFile.getRef();
+            }
+        }
 
         Form<Coffee> coffeeForm = formFactory.form(Coffee.class).bindFromRequest(request);
 
         if (coffeeForm.hasErrors()) {
-            return badRequest(views.html.admin.add_coffee.render(coffeeForm, request));
+            return badRequest(views.html.admin.add_coffee.render(coffeeForm, request))
+                    .flashing("error", "Invalid input. Please try again.");
         }
 
         Coffee coffee = coffeeForm.get();
 
-        if (imageFile != null) {
-            String fileName = imageFile.getFilename();
-            TemporaryFile tempFile = imageFile.getRef();
+        // ✅ Save the image if provided
+        if (tempFile != null) {
             String uploadPath = "public/uploads/";
             File destFile = new File(uploadPath + fileName);
-
             try {
-                Files.createDirectories(Path.of(uploadPath));
+                java.nio.file.Files.createDirectories(Path.of(uploadPath));
                 tempFile.moveFileTo(destFile, true);
+                coffee.setImageUrl("/assets/uploads/" + fileName); // Use setter method here
             } catch (Exception e) {
                 return internalServerError("File upload failed: " + e.getMessage());
             }
-
-            coffee.imageUrl = "/assets/uploads/" + fileName;
         }
 
         coffee.save();
-        return redirect(routes.AdminController.list());
+        return redirect(routes.AdminController.list()).flashing("success", "Coffee added successfully!");
     }
 
     // Delete a coffee item
@@ -81,14 +88,15 @@ public class AdminController extends Controller {
         if (coffee != null) {
             coffee.delete();
         }
-        return redirect(routes.AdminController.list());
+        return redirect(routes.AdminController.list()).flashing("success", "Coffee deleted!");
     }
 
     // Show form to edit an existing coffee item
     public Result editForm(Http.Request request, int id) {
         Coffee coffee = Coffee.find.byId(id);
         if (coffee == null) {
-            return notFound("Coffee item not found");
+            return redirect(routes.AdminController.list())
+                    .flashing("error", "Coffee item not found!");
         }
         Form<Coffee> coffeeForm = formFactory.form(Coffee.class).fill(coffee);
         return ok(views.html.admin.edit_coffee.render(coffeeForm, coffee, request));
@@ -96,29 +104,57 @@ public class AdminController extends Controller {
 
     // Handle coffee update
     public Result update(Http.Request request, int id) {
-        Form<Coffee> coffeeForm = formFactory.form(Coffee.class).bindFromRequest(request);
+        Coffee existingCoffee = Coffee.find.byId(id);
+        if (existingCoffee == null) {
+            return redirect(routes.AdminController.list())
+                    .flashing("error", "Coffee item not found!");
+        }
 
+        Form<Coffee> coffeeForm = formFactory.form(Coffee.class).bindFromRequest(request);
         if (coffeeForm.hasErrors()) {
-            return badRequest(views.html.admin.edit_coffee.render(coffeeForm, Coffee.find.byId(id), request));
+            return badRequest(views.html.admin.edit_coffee.render(coffeeForm, existingCoffee, request))
+                    .flashing("error", "Invalid form submission. Please check your inputs.");
         }
 
         Coffee updatedCoffee = coffeeForm.get();
-        Coffee existingCoffee = Coffee.find.byId(id);
 
-        if (existingCoffee == null) {
-            return notFound("Coffee item not found");
+        // ✅ Handle image file upload (if provided)
+        Http.MultipartFormData<TemporaryFile> body = request.body().asMultipartFormData();
+        TemporaryFile tempFile = null;
+        String fileName = null;
+
+        if (body != null) {
+            Http.MultipartFormData.FilePart<TemporaryFile> imageFile = body.getFile("image");
+            if (imageFile != null) {
+                fileName = System.currentTimeMillis() + "_" + imageFile.getFilename();
+                tempFile = imageFile.getRef();
+            }
         }
 
-        existingCoffee.name = updatedCoffee.name;
-        existingCoffee.description = updatedCoffee.description;
-        existingCoffee.price = updatedCoffee.price;
-        existingCoffee.size = updatedCoffee.size;
-        existingCoffee.quantity = updatedCoffee.quantity;
-        existingCoffee.imageUrl = updatedCoffee.imageUrl;
+        if (tempFile != null) {
+            String uploadPath = "public/uploads/";
+            File destFile = new File(uploadPath + fileName);
+            try {
+                java.nio.file.Files.createDirectories(Path.of(uploadPath));
+                tempFile.moveFileTo(destFile, true);
+                existingCoffee.setImageUrl("/assets/uploads/" + fileName); // Use setter method here
+            } catch (Exception e) {
+                return badRequest(views.html.admin.edit_coffee.render(coffeeForm, existingCoffee, request))
+                        .flashing("error", "Image upload failed: " + e.getMessage());
+            }
+        }
 
-        existingCoffee.update();
+        // ✅ Update other fields using setter methods
+        existingCoffee.setName(updatedCoffee.getName());
+        existingCoffee.setDescription(updatedCoffee.getDescription());
+        existingCoffee.setPrice(new BigDecimal(updatedCoffee.getPrice()));  // Ensure correct BigDecimal conversion
+        existingCoffee.setSize(updatedCoffee.getSize());
+        existingCoffee.setQuantity(updatedCoffee.getQuantity());
 
-        return redirect(routes.AdminController.list());
+        existingCoffee.update(); // Save updated coffee object
+
+        return redirect(routes.AdminController.list())
+                .flashing("success", "Coffee updated successfully!");
     }
 
     // ✅ NEW: Handle AJAX-based update for coffee item
@@ -131,26 +167,39 @@ public class AdminController extends Controller {
         int id = json.findPath("id").asInt();
         String name = json.findPath("name").asText();
         String description = json.findPath("description").asText();
-        BigDecimal price = new BigDecimal(json.findPath("price").asText()); // ✅ Convert to BigDecimal
+        String priceText = json.findPath("price").asText();
         String sizeString = json.findPath("size").asText();
         int quantity = json.findPath("quantity").asInt();
         String imageUrl = json.findPath("imageUrl").asText();
+
+        if (name == null || description == null || priceText == null || sizeString == null) {
+            return badRequest("Missing required fields");
+        }
+
+        BigDecimal price;
+        try {
+            price = new BigDecimal(priceText);  // Proper BigDecimal parsing
+        } catch (NumberFormatException e) {
+            return badRequest("Invalid price format");
+        }
 
         Coffee coffee = Coffee.find.byId(id);
         if (coffee == null) {
             return notFound("Coffee item not found");
         }
 
-        coffee.name = name;
-        coffee.description = description;
-        coffee.price = price;
-        coffee.size = CoffeeSize.valueOf(sizeString.toUpperCase()); // ✅ Convert String to Enum
-        coffee.quantity = quantity;
-        coffee.imageUrl = imageUrl;
+        try {
+            coffee.setName(name);  // Use setter instead of direct field access
+            coffee.setDescription(description);
+            coffee.setPrice(price);
+            coffee.setSize(CoffeeSize.valueOf(sizeString.toUpperCase()));
+            coffee.setQuantity(quantity);
+            coffee.setImageUrl(imageUrl);  // Use setter method for imageUrl
+            coffee.update();
+        } catch (IllegalArgumentException e) {
+            return badRequest("Invalid size value");
+        }
 
-        coffee.update();
         return ok("Item updated successfully");
     }
-
-
 }

@@ -35,8 +35,8 @@
                 <tbody>
                 @for(coffee <- cartItems) {
                 <tr>
-                    <td>@coffee.name</td>
-                    <td>@coffee.price</td>
+                    <td>@coffee.getName()</td>  <!-- Use getter method -->
+                    <td>KES @coffee.getPrice()</td> <!-- Use getter method -->
                 </tr>
                 }
                 </tbody>
@@ -44,9 +44,10 @@
 
             <div class="total-amount">
                 <h3>Total: KES <span id="checkout-total">
-                    @{cartItems.map(_.price.doubleValue()).sum}
-                </span></h3>
+        @{cartItems.map(_.getPrice().toDouble).sum} <!-- Convert String to Double -->
+    </span></h3>
             </div>
+
 
             <button class="btn place-order-btn">Place Order</button>
         </div>

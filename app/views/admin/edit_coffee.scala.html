@@ -6,7 +6,7 @@
 <div class="admin-container">
     <h2>Edit Coffee: @coffee.getName()</h2>
 
-    <form action="@routes.AdminController.update(coffee.getId())" method="post">
+    <form action="@routes.AdminController.update(coffee.getId())" method="post" enctype="multipart/form-data">
         @helper.CSRF.formField(request.asScala())
 
         <!-- Coffee Name -->
@@ -24,9 +24,9 @@
         <!-- Coffee Size -->
         <label for="size">Size:</label>
         <select id="size" name="size" required>
-            <option value="Small" @if(coffee.getSize() == CoffeeSize.Small) { selected }>Small</option>
-            <option value="Medium" @if(coffee.getSize() == CoffeeSize.Medium) { selected }>Medium</option>
-            <option value="Large" @if(coffee.getSize() == CoffeeSize.Large) { selected }>Large</option>
+            <option value="SMALL" @if(coffee.getSize() == CoffeeSize.SMALL) { selected }>Small</option>
+            <option value="MEDIUM" @if(coffee.getSize() == CoffeeSize.MEDIUM) { selected }>Medium</option>
+            <option value="LARGE" @if(coffee.getSize() == CoffeeSize.LARGE) { selected }>Large</option>
         </select>
 
         <!-- Coffee Quantity -->
@@ -34,12 +34,59 @@
         <input type="number" id="quantity" name="quantity"
                value="@coffeeForm("quantity").value().getOrElse(if (coffee.getQuantity() != null) coffee.getQuantity().toString else "0")" required>
 
+        <!-- Coffee Image Upload (Drag & Drop) -->
+        <label>Upload Image:</label>
+        <div id="drop-area">
+            <p>Drag & Drop an image here or <span id="file-select">click to upload</span></p>
+            <input type="file" name="image" id="image-input" accept="image/*" hidden>
+            <img id="preview" src="@coffee.getImageUrl() != null ? coffee.getImageUrl() : ''" alt="Image Preview">
 
-        <!-- Coffee Image URL -->
-        <label for="imageUrl">Image URL:</label>
-        <input type="text" id="imageUrl" name="imageUrl" value="@coffeeForm("imageUrl").value().orElse(coffee.getImageUrl())">
+        </div>
 
         <button type="submit">Update Coffee</button>
     </form>
 </div>
+
+<!-- JavaScript for Drag & Drop Image Upload -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const dropArea = document.getElementById("drop-area");
+        const fileInput = document.getElementById("image-input");
+        const fileSelect = document.getElementById("file-select");
+        const preview = document.getElementById("preview");
+
+        fileSelect.addEventListener("click", () => fileInput.click());
+        fileInput.addEventListener("change", handleFiles);
+
+        dropArea.addEventListener("dragover", (e) => {
+            e.preventDefault();
+            dropArea.style.backgroundColor = "#f1f1f1";
+        });
+
+        dropArea.addEventListener("dragleave", () => {
+            dropArea.style.backgroundColor = "transparent";
+        });
+
+        dropArea.addEventListener("drop", (e) => {
+            e.preventDefault();
+            dropArea.style.backgroundColor = "transparent";
+            if (e.dataTransfer.files.length) {
+                fileInput.files = e.dataTransfer.files;
+                handleFiles();
+            }
+        });
+
+        function handleFiles() {
+            const file = fileInput.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    preview.src = e.target.result;
+                    preview.style.display = "block";
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+    });
+</script>
 }

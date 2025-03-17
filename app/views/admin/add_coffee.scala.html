@@ -1,22 +1,56 @@
-@(coffeeForm: play.data.Form[models.Coffee], request: Http.Request)
+@(coffeeForm: play.data.Form[models.Coffee], request: play.mvc.Http.Request)
 
-@main("Add Coffee") {
-<h2>Add New Coffee</h2>
+@import helper._
+
+<style>
+    #drop-area {
+        border: 2px dashed #ccc;
+        padding: 20px;
+        text-align: center;
+        cursor: pointer;
+        width: 100%;
+        max-width: 400px;
+        margin: auto;
+    }
+    #drop-area:hover {
+        background-color: #f8f8f8;
+    }
+    #preview {
+        width: 100px;
+        height: auto;
+        margin-top: 10px;
+        display: none;
+    }
+</style>
 
 <form action="@routes.AdminController.create()" method="post" enctype="multipart/form-data">
-    @helper.CSRF.formField(request.asScala())  <!-- ✅ Convert request to RequestHeader -->
+    @helper.CSRF.formField(request.asScala())
 
+    <!-- Coffee Name -->
     <label for="name">Name:</label>
-    <input type="text" name="name" required><br>
+    <input type="text" id="name" name="name" required><br>
 
+    <!-- Coffee Description -->
+    <label for="description">Description:</label>
+    <textarea id="description" name="description"></textarea><br>
+
+    <!-- Coffee Price -->
     <label for="price">Price (KES):</label>
-    <input type="text" name="price" required><br>
+    <input type="number" id="price" name="price" step="0.01" required><br>
 
+    <!-- Coffee Size -->
     <label for="size">Size:</label>
-    <input type="text" name="size" required><br>
+    <select id="size" name="size" required>
+        <option value="SMALL">Small</option>
+        <option value="MEDIUM">Medium</option>
+        <option value="LARGE">Large</option>
+    </select><br>
 
+    <!-- Coffee Quantity -->
+    <label for="quantity">Quantity:</label>
+    <input type="number" id="quantity" name="quantity" min="0" required><br>
 
-    <!-- Drag & Drop Image Upload -->
+    <!-- Drag and Drop Image Upload -->
     <label>Upload Image:</label>
     <div id="drop-area">
         <p>Drag & Drop an image here or <span id="file-select">click to upload</span></p>
@@ -27,79 +61,44 @@
     <button type="submit">Add Coffee</button>
 </form>
 
-<!-- ✅ JavaScript for Drag & Drop -->
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function() {
         const dropArea = document.getElementById("drop-area");
         const fileInput = document.getElementById("image-input");
         const fileSelect = document.getElementById("file-select");
         const preview = document.getElementById("preview");
 
-        // Click event to trigger file input
         fileSelect.addEventListener("click", () => fileInput.click());
+        fileInput.addEventListener("change", handleFiles);
 
-        // Handle file input change
-        fileInput.addEventListener("change", (event) => handleFiles(event.target.files));
-
-        // Drag & Drop Events
-        dropArea.addEventListener("dragover", (event) => {
-            event.preventDefault();
-            dropArea.classList.add("dragover");
+        dropArea.addEventListener("dragover", (e) => {
+            e.preventDefault();
+            dropArea.style.backgroundColor = "#f1f1f1";
         });
 
         dropArea.addEventListener("dragleave", () => {
-            dropArea.classList.remove("dragover");
+            dropArea.style.backgroundColor = "transparent";
         });
 
-        dropArea.addEventListener("drop", (event) => {
-            event.preventDefault();
-            dropArea.classList.remove("dragover");
-            handleFiles(event.dataTransfer.files);
+        dropArea.addEventListener("drop", (e) => {
+            e.preventDefault();
+            dropArea.style.backgroundColor = "transparent";
+            if (e.dataTransfer.files.length) {
+                fileInput.files = e.dataTransfer.files;
+                handleFiles();
+            }
         });
 
-        function handleFiles(files) {
-            if (files.length > 0) {
-                const file = files[0];
+        function handleFiles() {
+            const file = fileInput.files[0];
+            if (file) {
                 const reader = new FileReader();
-                reader.onload = () => {
-                    preview.src = reader.result;
+                reader.onload = (e) => {
+                    preview.src = e.target.result;
                     preview.style.display = "block";
                 };
                 reader.readAsDataURL(file);
-                fileInput.files = files;
             }
         }
     });
 </script>
-
-<!-- ✅ Improved CSS -->
-<style>
-    #drop-area {
-        border: 2px dashed #ccc;
-        border-radius: 10px;
-        padding: 20px;
-        text-align: center;
-        cursor: pointer;
-        background-color: #f9f9f9;
-        margin-bottom: 10px;
-        width: 100%;
-        max-width: 400px;
-    }
-    #drop-area p {
-        margin: 0;
-        font-weight: bold;
-    }
-    #drop-area.dragover {
-        border-color: #007bff;
-        background-color: #e0e0e0;
-    }
-    #preview {
-        display: none;
-        max-width: 100%;
-        height: auto;
-        margin-top: 10px;
-        border-radius: 5px;
-        box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
-    }
-</style>
-}

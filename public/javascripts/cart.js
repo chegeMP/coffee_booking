@@ -3,17 +3,16 @@ document.addEventListener("DOMContentLoaded", function () {
     document.addEventListener("click", function (event) {
         // Handle "Add to Cart" button click
         if (event.target.classList.contains("add-to-cart")) {
-            const coffeeName = event.target.getAttribute("data-name");
+            const coffeeId = event.target.getAttribute("data-id");  // Getting the coffee ID
             const coffeePrice = event.target.getAttribute("data-price");
 
-            fetch("/add-to-cart", {
+            fetch(`/add-to-cart/${coffeeId}`, {  // Use /add-to-cart/:id route
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                 },
                 body: JSON.stringify({
-                    name: coffeeName,
                     price: coffeePrice
                 })
             })

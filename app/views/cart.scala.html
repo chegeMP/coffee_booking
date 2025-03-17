@@ -13,10 +13,10 @@
         <tbody>
         @for(coffee <- coffeeList) {
         <tr>
-            <td>@coffee.name</td>
-            <td>@coffee.price</td>
+            <td>@coffee.getName()</td>  <!-- Use getter method -->
+            <td>KES @coffee.getPrice()</td> <!-- Use getter method -->
             <td>
-                <a href="@routes.HomeController.removeFromCart(coffee.id)">Remove</a>
+                <a href="@routes.HomeController.removeFromCart(coffee.getId())">Remove</a> <!-- Use getter method -->
             </td>
         </tr>
         }
