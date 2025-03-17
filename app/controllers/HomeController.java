@@ -25,8 +25,6 @@ public class HomeController extends Controller {
         return ok(views.html.cart.render(cartItems, request)); //  Ensure correct parameter order
     }
 
-
-
     public Result checkout(Http.Request request) {
         List<Coffee> cartItems = getCartItemsFromSession(request); //  Get cart items
         return ok(views.html.checkout.render(cartItems, request)); //  Pass correct order
@@ -44,7 +42,7 @@ public class HomeController extends Controller {
 
             for (String id : coffeeIds) {
                 Coffee coffee = Coffee.find.byId(Integer.parseInt(id)); // ✅ Convert to Integer
-                 // Fetch coffee from DB
+                // Fetch coffee from DB
                 if (coffee != null) {
                     cartItems.add(coffee);
                 }
@@ -79,5 +77,17 @@ public class HomeController extends Controller {
         }
 
         return redirect(routes.HomeController.cart()); // Redirect if cart is empty
+    }
+
+    // ✅ Get the number of items in the cart (Fix for missing method)
+    public Result getCartCount(Http.Request request) {
+        int count = 0; // Default cart count
+        String cartData = request.session().getOptional("cart").orElse(""); // Get cart session
+
+        if (!cartData.isEmpty()) {
+            count = cartData.split(",").length; // Count items
+        }
+
+        return ok(String.valueOf(count)); // Return count as response
     }
 }

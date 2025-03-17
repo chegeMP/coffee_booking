@@ -9,13 +9,22 @@ GET     /cart                        controllers.HomeController.cart(request: Re
 GET     /checkout                    controllers.HomeController.checkout(request: Request)
 POST    /cart/remove/:id             controllers.HomeController.removeFromCart(request: Request, id: Int)
 
+# Cart Functionality
+POST    /add-to-cart/:id              controllers.HomeController.addToCart(request: Request, id: Long)
+
+GET     /cart-count                  controllers.HomeController.getCartCount(request: Request)
+
+
 # Admin Routes for managing coffee items
 GET     /admin/coffee                controllers.AdminController.list()
 GET     /admin/coffee/new            controllers.AdminController.createForm(request: Request)
-POST    /admin/coffee   controllers.AdminController.create(request: Request)
+POST    /admin/coffee                controllers.AdminController.create(request: Request)
 GET     /admin/coffee/:id/delete     controllers.AdminController.delete(request: Request, id: Int)
-GET     /admin             controllers.AdminController.dashboard(request: Request)
+GET     /admin                       controllers.AdminController.dashboard(request: Request)
 
+# Editing coffee items
+GET     /admin/coffee/edit/:id        controllers.AdminController.editForm(request: Request, id: Int)
+POST    /admin/coffee/update/:id      controllers.AdminController.update(request: Request, id: Int)
 
-GET   /admin/coffee/edit/:id     controllers.AdminController.editForm(request: Request, id: Int)
-POST  /admin/coffee/update/:id   controllers.AdminController.update(request: Request, id: Int)
+# Update product details API (for editing items dynamically)
+POST    /update-item                  controllers.AdminController.updateItem(request: Request)

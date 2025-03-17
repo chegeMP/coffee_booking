@@ -2,33 +2,42 @@
 
 @main("Edit Coffee") {
 <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/styles.css")">
-<div class="admin-container">
-    <h2>Edit Coffee: @coffee.name</h2>
 
-    <form action="@routes.AdminController.update(coffee.id)" method="post">
+<div class="admin-container">
+    <h2>Edit Coffee: @coffee.getName()</h2>
+
+    <form action="@routes.AdminController.update(coffee.getId())" method="post">
         @helper.CSRF.formField(request.asScala())
 
+        <!-- Coffee Name -->
         <label for="name">Name:</label>
-        <input type="text" id="name" name="name" value="@coffeeForm("name").value" required>
+        <input type="text" id="name" name="name" value="@coffeeForm("name").value().getOrElse(coffee.getName())" required>
 
+        <!-- Coffee Description -->
         <label for="description">Description:</label>
-        <textarea id="description" name="description">@coffeeForm("description").value</textarea>
+        <textarea id="description" name="description">@coffeeForm("description").value().getOrElse(coffee.getDescription())</textarea>
 
+        <!-- Coffee Price -->
         <label for="price">Price (KES):</label>
-        <input type="number" id="price" name="price" value="@coffeeForm("price").value" step="0.01" required>
+        <input type="number" id="price" name="price" value="@coffeeForm("price").value().getOrElse(coffee.getPrice().toString())" step="0.01" required>
 
+        <!-- Coffee Size -->
         <label for="size">Size:</label>
-        <select id="size" name="size">
-            <option value="Small" @if(coffee.size.toString == "Small") { selected }>Small</option>
-            <option value="Medium" @if(coffee.size.toString == "Medium") { selected }>Medium</option>
-            <option value="Large" @if(coffee.size.toString == "Large") { selected }>Large</option>
+        <select id="size" name="size" required>
+            <option value="Small" @if(coffee.getSize() == CoffeeSize.Small) { selected }>Small</option>
+            <option value="Medium" @if(coffee.getSize() == CoffeeSize.Medium) { selected }>Medium</option>
+            <option value="Large" @if(coffee.getSize() == CoffeeSize.Large) { selected }>Large</option>
         </select>
 
+        <!-- Coffee Quantity -->
         <label for="quantity">Quantity:</label>
-        <input type="number" id="quantity" name="quantity" value="@coffeeForm("quantity").value" required>
+        <input type="number" id="quantity" name="quantity"
+               value="@coffeeForm("quantity").value().getOrElse(if (coffee.getQuantity() != null) coffee.getQuantity().toString else "0")" required>
 
+
+        <!-- Coffee Image URL -->
         <label for="imageUrl">Image URL:</label>
-        <input type="text" id="imageUrl" name="imageUrl" value="@coffeeForm("imageUrl").value">
+        <input type="text" id="imageUrl" name="imageUrl" value="@coffeeForm("imageUrl").value().orElse(coffee.getImageUrl())">
 
         <button type="submit">Update Coffee</button>
     </form>

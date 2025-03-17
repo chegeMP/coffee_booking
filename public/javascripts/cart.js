@@ -1,92 +1,99 @@
 document.addEventListener("DOMContentLoaded", function () {
-    let menuItems = document.querySelectorAll(".menu-item");
+    // Event delegation for dynamically added items
+    document.addEventListener("click", function (event) {
+        // Handle "Add to Cart" button click
+        if (event.target.classList.contains("add-to-cart")) {
+            const coffeeName = event.target.getAttribute("data-name");
+            const coffeePrice = event.target.getAttribute("data-price");
 
-    // Function to enable editing
-    function enableEditing() {
-        document.querySelectorAll(".menu-item").forEach((item, index) => {
-            let editBtn = document.createElement("button");
-            editBtn.textContent = "Edit";
-            editBtn.classList.add("btn", "edit-item");
-            editBtn.setAttribute("data-index", index);
-            item.querySelector(".menu-details").appendChild(editBtn);
-
-            let removeBtn = document.createElement("button");
-            removeBtn.textContent = "Remove";
-            removeBtn.classList.add("btn", "remove-item");
-            removeBtn.setAttribute("data-index", index);
-            item.querySelector(".menu-details").appendChild(removeBtn);
-        });
-
-        attachEventListeners();
-    }
-
-    // Function to attach event listeners to edit and remove buttons
-    function attachEventListeners() {
-        document.querySelectorAll(".edit-item").forEach(button => {
-            button.addEventListener("click", function () {
-                const index = parseInt(this.getAttribute("data-index"));
-                editItem(index);
+            fetch("/add-to-cart", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({
+                    name: coffeeName,
+                    price: coffeePrice
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "success") {
+                    alert("Item added to cart!");
+                    updateCartCount();
+                } else {
+                    alert("Error adding item to cart.");
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
             });
-        });
-
-        document.querySelectorAll(".remove-item").forEach(button => {
-            button.addEventListener("click", function () {
-                const index = parseInt(this.getAttribute("data-index"));
-                removeItem(index);
-            });
-        });
-    }
-
-    // Function to edit a menu item
-    function editItem(index) {
-        let menuItem = document.querySelectorAll(".menu-item")[index];
-        let name = menuItem.querySelector("h3");
-        let description = menuItem.querySelector("p");
-        let price = menuItem.querySelector(".price");
-
-        let newName = prompt("Enter new name:", name.textContent);
-        let newDescription = prompt("Enter new description:", description.textContent);
-        let newPrice = prompt("Enter new price:", price.textContent.replace("KES ", ""));
-
-        if (newName && newDescription && newPrice) {
-            name.textContent = newName;
-            description.textContent = newDescription;
-            price.textContent = "KES " + newPrice;
         }
-    }
 
-    // Function to remove a menu item
-    function removeItem(index) {
-        if (confirm("Are you sure you want to remove this item?")) {
-            let menuItem = document.querySelectorAll(".menu-item")[index];
-            menuItem.remove();
+        // Handle "Edit Product" button click
+        if (event.target.classList.contains("edit-product")) {
+            let index = event.target.getAttribute("data-index");
+            editItem(index);
         }
-    }
-
-    // Add item function
-    document.getElementById("add-item-form").addEventListener("submit", function (event) {
-        event.preventDefault();
-        const name = document.getElementById("item-name").value;
-        const description = document.getElementById("item-description").value;
-        const price = document.getElementById("item-price").value;
-        const image = document.getElementById("item-image").value;
-
-        let newItem = document.createElement("div");
-        newItem.classList.add("menu-item");
-        newItem.innerHTML = `
-            <img src="${image}" alt="${name}" class="menu-img">
-            <div class="menu-details">
-                <h3>${name}</h3>
-                <p>${description}</p>
-                <span class="price">KES ${price}</span>
-                <button class="btn add-to-cart" data-name="${name}" data-price="${price}">Add to Cart</button>
-            </div>
-        `;
-
-        document.querySelector(".menu-grid").appendChild(newItem);
-        enableEditing();
-        this.reset();
     });
-
-    enableEditing();
 });
+
+// Function to update the cart count
+function updateCartCount() {
+    fetch("/cart-count")
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById("cart-count").innerText = data.count;
+        })
+        .catch(error => console.error("Error fetching cart count:", error));
+}
+
+// Function to edit product details
+function editItem(index) {
+    console.log("Editing item at index:", index);
+
+    let menuItem = document.querySelectorAll(".menu-item")[index];
+    if (!menuItem) {
+        console.error("Menu item not found at index:", index);
+        return;
+    }
+
+    let newName = prompt("Enter new name:", menuItem.querySelector(".item-name").innerText);
+    let newDescription = prompt("Enter new description:", menuItem.querySelector(".item-description").innerText);
+    let newPrice = prompt("Enter new price:", menuItem.querySelector(".item-price").innerText);
+
+    if (!newName || !newDescription || !newPrice) {
+        alert("Invalid input! Edit canceled.");
+        return;
+    }
+
+    fetch("/update-item", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content")
+        },
+        body: JSON.stringify({
+            index: index,
+            name: newName,
+            description: newDescription,
+            price: newPrice
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("Server response:", data);
+        if (data.status === "success") {
+            alert("Item updated successfully!");
+            menuItem.querySelector(".item-name").innerText = newName;
+            menuItem.querySelector(".item-description").innerText = newDescription;
+            menuItem.querySelector(".item-price").innerText = newPrice;
+        } else {
+            alert("Error updating item.");
+        }
+    })
+    .catch(error => {
+        console.error("Error:", error);
+    });
+}
