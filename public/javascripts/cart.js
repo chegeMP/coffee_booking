@@ -1,31 +1,32 @@
 document.addEventListener("DOMContentLoaded", function () {
+    // Grab CSRF Token once DOM is ready
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
     // Event delegation for dynamically added items
     document.addEventListener("click", function (event) {
-        // Handle "Add to Cart" button click
+        // ✅ Add to Cart
         if (event.target.classList.contains("add-to-cart")) {
-            const coffeeId = event.target.getAttribute("data-id");  // Getting the coffee ID
-            const coffeeName = event.target.getAttribute("data-name"); // Getting the coffee name
-            const coffeePrice = event.target.getAttribute("data-price"); // Getting the coffee price
+            const coffeeId = event.target.getAttribute("data-id");
+            const coffeeName = event.target.getAttribute("data-name");
+            const coffeePrice = event.target.getAttribute("data-price");
 
-            // Check if any of the data attributes are missing
             if (!coffeeId || !coffeeName || !coffeePrice) {
-                console.error("Missing coffee data attributes: coffeeId, coffeeName, or coffeePrice");
-                return;  // Exit if necessary attributes are not found
+                console.error("Missing coffee data attributes");
+                return;
             }
 
-            // Add to cart request
             fetch(`/add-to-cart/${coffeeId}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    'Csrf-Token': csrfToken
                 },
-                body: JSON.stringify({
-                    name: coffeeName,
-                    price: coffeePrice
-                })
+                body: JSON.stringify({ name: coffeeName, price: coffeePrice })
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) throw new Error("Network response was not ok");
+                return response.json();
+            })
             .then(data => {
                 if (data.status === "success") {
                     alert("Item added to cart!");
@@ -34,31 +35,64 @@ document.addEventListener("DOMContentLoaded", function () {
                     alert("Error adding item to cart.");
                 }
             })
-            .catch(error => {
-                console.error("Error:", error);
-            });
+            .catch(error => console.error("Error:", error));
         }
 
-        // Handle "Edit Product" button click
+        // ✅ Edit Product
         if (event.target.classList.contains("edit-product")) {
             let index = event.target.getAttribute("data-index");
-            editItem(index);
+            editItem(index, csrfToken);
+        }
+
+        // ✅ Remove from Cart
+        if (event.target.classList.contains("remove-from-cart")) {
+            let itemId = event.target.getAttribute("data-id");
+            if (!itemId) {
+                console.error("Missing item ID for removal");
+                return;
+            }
+
+            fetch(`/cart/remove/${itemId}`, {
+                method: 'POST', // 🔥🔥 Important fix: POST method
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Csrf-Token': csrfToken
+                }
+            })
+            .then(response => {
+                if (!response.ok) throw new Error("Failed to remove item");
+                return response.json();
+            })
+            .then(data => {
+                if (data.status === "success") {
+                    alert("Item removed from cart!");
+                    updateCartCount(); // Optional, refresh the count
+                    // Optionally remove item from DOM
+                    event.target.closest(".cart-item").remove();
+                } else {
+                    alert("Failed to remove item");
+                }
+            })
+            .catch(error => console.error("Error:", error));
         }
     });
 });
 
-// Function to update the cart count
+// ✅ Update Cart Count
 function updateCartCount() {
     fetch("/cart-count")
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) throw new Error("Failed to fetch cart count");
+            return response.json();
+        })
         .then(data => {
             document.getElementById("cart-count").innerText = data.count;
         })
         .catch(error => console.error("Error fetching cart count:", error));
 }
 
-// Function to edit product details
-function editItem(index) {
+// ✅ Edit Product Function
+function editItem(index, csrfToken) {
     console.log("Editing item at index:", index);
 
     let menuItem = document.querySelectorAll(".menu-item")[index];
@@ -80,7 +114,7 @@ function editItem(index) {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content")
+            "Csrf-Token": csrfToken
         },
         body: JSON.stringify({
             index: index,
@@ -89,7 +123,10 @@ function editItem(index) {
             price: newPrice
         })
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) throw new Error("Failed to update item");
+        return response.json();
+    })
     .then(data => {
         console.log("Server response:", data);
         if (data.status === "success") {
@@ -101,7 +138,5 @@ function editItem(index) {
             alert("Error updating item.");
         }
     })
-    .catch(error => {
-        console.error("Error:", error);
-    });
+    .catch(error => console.error("Error:", error));
 }

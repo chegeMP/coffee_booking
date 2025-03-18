@@ -14,7 +14,10 @@
                 <h3>@coffee.getName()</h3>
                 <p>@coffee.getDescription()</p>
                 <span class="price">KES @coffee.getPrice()</span>
+
+                <!-- ✅ Fixed Button with data-id -->
                 <button class="btn add-to-cart"
+                        data-id="@coffee.getId()"
                         data-name="@Option(coffee.getName()).getOrElse("Unknown")"
                 data-price="@Option(coffee.getPrice()).getOrElse("0")">
                 Add to Cart
@@ -32,29 +35,44 @@
                 <h3>Coffee House Donut Special</h3>
                 <p>A fluffy donut served with a hint of espresso glaze.</p>
                 <span class="price">KES 350</span>
-                <button class="btn add-to-cart" data-name="Coffee House Donut Special" data-price="350">Add to Cart</button>
+                <button class="btn add-to-cart"
+                        data-id="donut-special"
+                        data-name="Coffee House Donut Special"
+                        data-price="350">Add to Cart</button>
             </div>
         </div>
+
         <div class="menu-item">
             <img src="@routes.Assets.versioned("images/croissant.jpg")" alt="Croissant" class="menu-img">
             <div class="menu-details">
                 <h3>Butter Croissant</h3>
                 <p>Flaky, buttery croissant—perfect with coffee.</p>
                 <span class="price">KES 400</span>
-                <button class="btn add-to-cart" data-name="Butter Croissant" data-price="400">Add to Cart</button>
+                <button class="btn add-to-cart"
+                        data-id="croissant"
+                        data-name="Butter Croissant"
+                        data-price="400">Add to Cart</button>
             </div>
         </div>
+
         <div class="menu-item">
             <img src="@routes.Assets.versioned("images/cheesecake.jpg")" alt="Cheesecake" class="menu-img">
             <div class="menu-details">
                 <h3>Classic Cheesecake</h3>
                 <p>Creamy cheesecake with a graham cracker crust.</p>
                 <span class="price">KES 650</span>
-                <button class="btn add-to-cart" data-name="Classic Cheesecake" data-price="650">Add to Cart</button>
+                <button class="btn add-to-cart"
+                        data-id="cheesecake"
+                        data-name="Classic Cheesecake"
+                        data-price="650">Add to Cart</button>
             </div>
         </div>
     </div>
 </section>
 
+<!-- ✅ CSRF Token for Security -->
+<meta name="csrf-token" content="@helper.CSRF.getToken.value">
+
+<!-- ✅ Link your JS file -->
 <script src="@routes.Assets.versioned("javascripts/cart.js")"></script>
 }

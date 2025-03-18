@@ -12,11 +12,11 @@
         </thead>
         <tbody>
         @for(coffee <- coffeeList) {
-        <tr>
-            <td>@coffee.getName()</td>  <!-- Use getter method -->
-            <td>KES @coffee.getPrice()</td> <!-- Use getter method -->
+        <tr class="cart-item">
+            <td>@coffee.getName()</td>
+            <td>KES @coffee.getPrice()</td>
             <td>
-                <a href="@routes.HomeController.removeFromCart(coffee.getId())">Remove</a> <!-- Use getter method -->
+                <button class="remove-from-cart" data-id="@coffee.getId()">Remove</button>
             </td>
         </tr>
         }
